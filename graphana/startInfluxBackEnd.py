@@ -22,7 +22,7 @@ def sample():
     return {
         "memory_load": memory_load,
         "cpu_load": cpu_load,
-        "dummy": 1,
+        "dummy": "name",
     }
 
 # Function to collect and store memory and CPU load in InfluxDB
