@@ -1,1 +1,1 @@
-sudo systemctl restart VPNMonitring.service
+sudo systemctl restart VPNMonitoring.service
