@@ -21,7 +21,8 @@ def sample():
     cpu_load = psutil.cpu_percent(interval=1)  # CPU usage in percentage
     return {
         "memory_load": memory_load,
-        "cpu_load": cpu_load
+        "cpu_load": cpu_load,
+        "dummy": 1,
     }
 
 # Function to collect and store memory and CPU load in InfluxDB
