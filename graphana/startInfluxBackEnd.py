@@ -15,7 +15,7 @@ INFLUXDB_DATABASE = 'metrics'
 client = InfluxDBClient(host=INFLUXDB_HOST, port=INFLUXDB_PORT, username=INFLUXDB_USER, password=INFLUXDB_PASSWORD)
 client.switch_database(INFLUXDB_DATABASE)
 
-# Function to return memory and CPU load as a dictionary
+
 def sample():
     memory_load = psutil.virtual_memory().percent  # Memory usage in percentage
     cpu_load = psutil.cpu_percent(interval=1)  # CPU usage in percentage
@@ -25,7 +25,7 @@ def sample():
         "dummy1": "name",
     }
 
-# Function to collect and store memory and CPU load in InfluxDB
+
 def collect_and_store_metrics():
     while True:
         # Get the current memory and CPU load as a dictionary
