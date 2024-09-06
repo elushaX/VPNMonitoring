@@ -1,0 +1,10 @@
+[Unit]
+Description=Monitoring Tool
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+User=root
+Restart=on-failure
