@@ -9,5 +9,6 @@ echo "WorkingDirectory=$wd" >> VPNMonitoring.service
 
 sudo cp ./VPNMonitoring.service /etc/systemd/system/VPNMonitoring.service
 sudo systemctl daemon-reload
-sudo systemctl enable /etc/systemd/system/VPNMonitoring.service
+sudo systemctl enable VPNMonitoring.service
 sudo systemctl start VPNMonitoring.service
+sudo systemctl status VPNMonitoring.service
