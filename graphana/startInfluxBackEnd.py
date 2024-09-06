@@ -22,7 +22,7 @@ def sample():
     return {
         "memory_load": memory_load,
         "cpu_load": cpu_load,
-        "dummy1": "name",
+        "dummy2": ["name1", "name2"],
     }
 
 
