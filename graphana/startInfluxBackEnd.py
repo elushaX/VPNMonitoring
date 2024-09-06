@@ -49,20 +49,8 @@ def collect_and_store_metrics():
         # Write the data points to InfluxDB
         client.write_points(influx_data)
 
-        # Remove data older than one hour
-        delete_old_data()
-
         # Sleep for 1 second before collecting data again
         time.sleep(1)
-
-# Function to delete data older than one hour from InfluxDB
-def delete_old_data():
-    one_hour_ago = datetime.utcnow() - timedelta(hours=1)
-    one_hour_ago_iso = one_hour_ago.isoformat()
-
-    # Delete old data from the 'system_metrics' measurement
-    query = f"DELETE FROM system_metrics WHERE time < '{one_hour_ago_iso}'"
-    client.query(query)
 
 if __name__ == '__main__':
     print("Collecting memory and CPU load data, and removing old data from InfluxDB...")
