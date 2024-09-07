@@ -80,6 +80,5 @@ def collect_and_store_metrics():
         time.sleep(1)
 
 
-if __name__ == '__main__':
-    print("Collecting Shadowsocks Information")
-    collect_and_store_metrics()
+print("Collecting Shadowsocks Information")
+collect_and_store_metrics()
