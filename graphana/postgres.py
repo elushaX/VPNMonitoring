@@ -41,7 +41,9 @@ class DBManager:
     def get_ips(self):
         """Stub function to get list of IPs - replace with your logic."""
         # Example static IPs. You should replace this method with actual logic.
-        return get_client_ips()
+        out = get_client_ips()
+        print(out)
+        return out
 
     def update_db(self):
         """Updates the database based on IP addresses."""
