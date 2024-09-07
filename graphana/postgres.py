@@ -6,8 +6,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
 
-Base = declarative_base()
+print("Collecting Shadowsocks Information")
 
+Base = declarative_base()
 
 def get_client_ips():
     script_path = "./listClients.sh"
@@ -82,5 +83,5 @@ def collect_and_store_metrics():
         time.sleep(1)
 
 
-print("Collecting Shadowsocks Information")
+print("Starting now")
 collect_and_store_metrics()
