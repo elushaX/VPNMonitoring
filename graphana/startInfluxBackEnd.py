@@ -23,8 +23,8 @@ class NetworkSampler:
         self.device = "eth0"
 
     def get_network_traffic(self):
-        sent = psutil.net_io_counters(pernic=True)[self.device][0]
-        received = psutil.net_io_counters(pernic=True)[self.device][1]
+        sent = float(psutil.net_io_counters(pernic=True)[self.device][0])
+        received = float(psutil.net_io_counters(pernic=True)[self.device][1])
         return sent, received
 
     def sample(self):
