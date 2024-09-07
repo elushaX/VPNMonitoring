@@ -1,9 +1,27 @@
+import subprocess
+import time
+
 from sqlalchemy import create_engine, Column, String, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
 
 Base = declarative_base()
+
+
+def get_client_ips():
+    script_path = "./listClients.sh"
+    try:
+        result = subprocess.run(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode != 0:
+            print(f"Error executing script: {result.stderr}")
+            return []
+        output_lines = result.stdout.splitlines()
+        return output_lines
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -23,7 +41,7 @@ class DBManager:
     def get_ips(self):
         """Stub function to get list of IPs - replace with your logic."""
         # Example static IPs. You should replace this method with actual logic.
-        return ['192.168.1.100', '192.168.1.101', '192.168.1.102']
+        return get_client_ips()
 
     def update_db(self):
         """Updates the database based on IP addresses."""
@@ -46,6 +64,22 @@ class DBManager:
         session.commit()
         session.close()
 
-if __name__ == "__main__":
-    db_manager = DBManager('postgresql://auser:1234@localhost/mydb')
-    db_manager.update_db()
+
+class Sampler:
+    def __init__(self):
+        self.db_manager = DBManager('postgresql://auser:1234@localhost/mydb')
+
+    def sample(self):
+        self.db_manager.update_db()
+
+
+def collect_and_store_metrics():
+    sampler = Sampler()
+    while True:
+        sampler.sample()
+        time.sleep(1)
+
+
+if __name__ == '__main__':
+    print("Collecting Shadowsocks Information")
+    collect_and_store_metrics()
