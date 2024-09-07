@@ -36,7 +36,7 @@ class NetworkSampler:
         self.sent_prev = sent_now
         self.received_prev = received_now
 
-        return recv, -sent
+        return recv, sent
 
 
 networkSampler = NetworkSampler()
