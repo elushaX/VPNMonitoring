@@ -21,31 +21,26 @@ for line in output_lines:
 import psutil
 import time
 
-class NetworkSampler:
-    def __init__(self):
-        self.sent_prev = 0
-        self.received_prev = 0
+def get_network_traffic():
+    net_io = psutil.net_io_counters()
+    sent = net_io.bytes_sent / (1024)  # Convert to MB
+    received = net_io.bytes_recv / (1024)  # Convert to MB
+    return sent, received
 
-    def get_network_traffic(self):
-        net_io = psutil.net_io_counters()
-        sent = net_io.bytes_sent / (1024)
-        received = net_io.bytes_recv / (1024)
-        return sent, received
+# Monitor network traffic in a loop
+if __name__ == "__main__":
+    print(f"{'Time':<10} {'MB Sent':<15} {'MB Received'}")
+    sent_prev = 0
+    received_prev = 0
+    while True:
+        sent_now, received_now = get_network_traffic()
+        
+        sent = sent_now - sent_prev
+        recv = received_now - received_prev
 
-    def sample(self):
-            sent_now, received_now = self.get_network_traffic()
-            
-            sent = sent_now - self.sent_prev
-            recv = received_now - self.received_prev
+        sent_prev = sent_now
+        received_prev = received_now
 
-            self.sent_prev = sent_now
-            self.received_prev = received_now
-            
-            return recv, -sent
-            print(f"{sent:.2f} {recv:.2f}")
+        print(f"{time.strftime('%H:%M:%S'):<10} {sent:<15.2f} {recv:.2f}")
 
-sampler = NetworkSampler()
-
-for i in range(1000):
-    sampler.sample()
-    time.sleep(1)
+        time.sleep(1)  # Pause for 1 second before getting the next measurement

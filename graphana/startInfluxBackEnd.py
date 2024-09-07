@@ -15,30 +15,32 @@ INFLUXDB_DATABASE = 'metrics'
 client = InfluxDBClient(host=INFLUXDB_HOST, port=INFLUXDB_PORT, username=INFLUXDB_USER, password=INFLUXDB_PASSWORD)
 client.switch_database(INFLUXDB_DATABASE)
 
+
 class NetworkSampler:
     def __init__(self):
         self.sent_prev = 0
         self.received_prev = 0
+        self.device = "eth0"
 
     def get_network_traffic(self):
-        net_io = psutil.net_io_counters()
-        sent = net_io.bytes_sent / (1024)
-        received = net_io.bytes_recv / (1024)
+        sent = psutil.net_io_counters(pernic=True)[self.device][0]
+        received = psutil.net_io_counters(pernic=True)[self.device][1]
         return sent, received
 
     def sample(self):
-            sent_now, received_now = self.get_network_traffic()
-            
-            sent = sent_now - self.sent_prev
-            recv = received_now - self.received_prev
+        sent_now, received_now = self.get_network_traffic()
 
-            self.sent_prev = sent_now
-            self.received_prev = received_now
-            
-            return recv, -sent
-            print(f"{sent:.2f} {recv:.2f}")
+        sent = sent_now - self.sent_prev
+        recv = received_now - self.received_prev
+
+        self.sent_prev = sent_now
+        self.received_prev = received_now
+
+        return recv, -sent
+
 
 networkSampler = NetworkSampler()
+
 
 def sample():
     memory_load = psutil.virtual_memory().percent  # Memory usage in percentage
