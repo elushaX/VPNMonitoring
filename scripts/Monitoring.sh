@@ -6,7 +6,7 @@ cd ../rundir/
 LOGFILE="backend_log_$(date +'%Y-%m-%d_%H-%M-%S').log"
 
 # Run the Python script and log output and crashes to the log file
-bash ../graphana/runBackEnds.sh > "$LOGFILE" 2>&1
+python3 ../graphana/influx.py > "$LOGFILE" 2>&1
 
 # Optional: Notify on crash
 if [ $? -ne 0 ]; then
