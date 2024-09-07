@@ -5,10 +5,23 @@ cd ../rundir/
 # Define log file name with current timestamp
 LOGFILE="backend_log_$(date +'%Y-%m-%d_%H-%M-%S').log"
 
-# Run the Python script and log output and crashes to the log file
-python3 ../graphana/postgres.py > "$LOGFILE" 2>&1
+# Run both Python scripts in parallel and log outputs to the same log file
+{
+  echo "Starting influx.py at $(date)"
+  python3 ../graphana/influx.py
+  echo "Finished influx.py at $(date)"
+} >> "$LOGFILE" 2>&1 &
 
-# Optional: Notify on crash
+{
+  echo "Starting postgres.py at $(date)"
+  python3 ../graphana/postgres.py
+  echo "Finished postgres.py at $(date)"
+} >> "$LOGFILE" 2>&1 &
+
+# Wait for both background jobs to finish
+wait
+
+# Optional: Notify if either script crashed
 if [ $? -ne 0 ]; then
-    echo "Script crashed. Check $LOGFILE for details."
+    echo "One of the scripts crashed. Check $LOGFILE for details."
 fi
