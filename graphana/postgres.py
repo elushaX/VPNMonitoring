@@ -11,7 +11,7 @@ print("Collecting Shadowsocks Information")
 Base = declarative_base()
 
 def get_client_ips():
-    script_path = "./listClients.sh"
+    script_path = "../graphana/listClients.sh"
     try:
         result = subprocess.run(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode != 0:
