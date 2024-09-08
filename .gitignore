@@ -1,2 +1,4 @@
 rundir/*
 scripts/VPNMonitoring.service
+*/.idea
+*/*build*
