@@ -13,33 +13,31 @@ client = InfluxDBClient(host=INFLUXDB_HOST, port=INFLUXDB_PORT, username=INFLUXD
 client.switch_database(INFLUXDB_DATABASE)
 
 
-def sample():
-    current_ips = get_client_ips()
-    return {
-        "active_users": len(current_ips),
-    }
-
-
 def collect_and_store_metrics():
+    last_active_users = 0
+
     while True:
-        data = sample()
-        current_time = datetime.utcnow().isoformat()
+        current_active_users = len(get_client_ips())
 
-        influx_data = [
-            {
-                "measurement": "system_metrics",
-                "tags": {
-                    "host": "localhost"
-                },
-                "time": current_time,
-                "fields": { key: value for key, value in data.items() }
-            }
-        ]
+        if current_active_users != last_active_users:
+            influx_data = [
+                {
+                    "measurement": "system_metrics",
+                    "tags": {
+                        "host": "localhost"
+                    },
+                    "time": datetime.utcnow().isoformat(),
+                    "fields": {
+                        "active_users" : current_active_users
+                    }
+                }
+            ]
 
-        client.write_points(influx_data)
+            client.write_points(influx_data)
 
-        # Sleep for 1 second before collecting data again
-        time.sleep(10)
+            last_active_users = current_active_users
+
+        time.sleep(5)
 
 
 print("Collecting active vpn users")
