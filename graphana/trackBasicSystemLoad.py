@@ -15,8 +15,10 @@ client.switch_database(INFLUXDB_DATABASE)
 
 class NetworkSampler:
     def __init__(self):
-        self.sent_prev = 0
-        self.received_prev = 0
+        s, r = self.get_network_traffic()
+
+        self.sent_prev = s
+        self.received_prev = r
         self.device = "eth0"
 
     def get_network_traffic(self):
