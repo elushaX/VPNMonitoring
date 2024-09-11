@@ -1,14 +1,11 @@
 
+from common import *
+
 from influxdb import InfluxDBClient
 import psutil
 import time
 from datetime import datetime, timedelta
 
-# InfluxDB connection parameters
-INFLUXDB_HOST = 'localhost'
-INFLUXDB_PORT = 8086
-INFLUXDB_USER = 'root'
-INFLUXDB_PASSWORD = 'root'
 INFLUXDB_DATABASE = 'metrics'
 
 # Connect to InfluxDB
@@ -83,6 +80,6 @@ def collect_and_store_metrics():
         # Sleep for 1 second before collecting data again
         time.sleep(1)
 
-if __name__ == '__main__':
-    print("Collecting memory and CPU load data, and removing old data from InfluxDB...")
-    collect_and_store_metrics()
+
+print("Collecting basic system load per our")
+collect_and_store_metrics()

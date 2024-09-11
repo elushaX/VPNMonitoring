@@ -1,27 +1,15 @@
-import subprocess
+from common import get_client_ips
+
 import time
+import datetime
 
 from sqlalchemy import create_engine, Column, String, DateTime, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import datetime
 
 print("Collecting Shadowsocks Information")
 
 Base = declarative_base()
-
-def get_client_ips():
-    script_path = "../graphana/listClients.sh"
-    try:
-        result = subprocess.run(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        if result.returncode != 0:
-            print(f"Error executing script: {result.stderr}")
-            return []
-        output_lines = result.stdout.splitlines()
-        return output_lines
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return []
 
 
 class User(Base):
