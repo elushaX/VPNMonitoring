@@ -10,7 +10,7 @@ cd ../rundir/ || { echo "Failed to change directory to ../rundir/"; exit 1; }
 LOGFILE="log_$(date +'%Y-%m-%d_%H-%M-%S').log"
 
 # Execute the script and redirect both stdout and stderr to the log file
-../graphana/runBackEnds.sh >> "$LOGFILE" 2>&1
+sudo ../graphana/runBackEnds.sh >> "$LOGFILE" 2>&1
 
 # Check if the script execution was successful
 if [ $? -ne 0 ]; then
