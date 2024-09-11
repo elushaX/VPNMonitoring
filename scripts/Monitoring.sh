@@ -7,7 +7,9 @@ mkdir -p ../rundir/
 cd ../rundir/ || { echo "Failed to change directory to ../rundir/"; exit 1; }
 
 # Define the log file with the current timestamp
-LOGFILE="log_$(date +'%Y-%m-%d_%H-%M-%S').log"
+LOGFILE="log"
+
+sudo rm "$LOGFILE"
 
 # Execute the script and redirect both stdout and stderr to the log file
 sudo ../graphana/runBackEnds.sh >> "$LOGFILE" 2>&1
