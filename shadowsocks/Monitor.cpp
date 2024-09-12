@@ -16,6 +16,7 @@ void processShadowSocksPackets(const Packet& packet) {
 }
 
 const std::string shadowSocksPort = "2338";
+const std::string shadowSocksIP = "185.238.170.251";
 
 // Callback function to process each packet
 void packetHandler(u_char* userData, const struct pcap_pkthdr* pkthdr, const u_char* packet) {
@@ -33,16 +34,14 @@ void packetHandler(u_char* userData, const struct pcap_pkthdr* pkthdr, const u_c
   Packet ssPacket;
   ssPacket.sizeBytes = pkthdr->len;
 
-  std::cout << "in " << src_ip << " out " << dst_ip << "\n";
-
-  if (std::string(src_ip).find("192.168") == std::string::npos) {
+  if (src_ip == shadowSocksIP) {
     ssPacket.incoming = true;
     ssPacket.ip = dst_ip;
-  } else if (std::string(dst_ip).find("192.168") == std::string::npos) {
+  } else if (dst_ip == shadowSocksIP) {
     ssPacket.incoming = false;
     ssPacket.ip = src_ip;
   } else {
-    std::cout << "Error Parsing data packet\n";
+    std::cout << "Error Parsing data packet - in " << src_ip << " out " << dst_ip << "\n";
   }
 
   if (ipHeader->ip_p == IPPROTO_TCP) {
