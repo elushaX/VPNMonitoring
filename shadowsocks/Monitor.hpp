@@ -7,6 +7,7 @@ struct Packet {
   bool incoming = false;
   std::string ip;
   std::string localIP;
+  std::string localPort;
 };
 
 void processPacket(const Packet& packet, bool ssPacket);
