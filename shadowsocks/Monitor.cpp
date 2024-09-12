@@ -60,6 +60,6 @@ void Monitor::sample() {
   std::cout << "total: in " << totalSpeed.in.get() / 1024 << " out: " << totalSpeed.out.get() / 1024 << "\n";
 
   for (auto &[_, con]: connections) {
-    std::cout << "connection: " << con.ip << " in " << con.speed.in.get() << " out: " << con.speed.out.get() << "\n";
+    std::cout << "connection: " << con.ip << " in " << con.speed.in.get() / 1024 << " out: " << con.speed.out.get() / 1024 << "\n";
   }
 }
