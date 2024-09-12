@@ -4,6 +4,8 @@
 
 #include <string>
 #include <map>
+#include <mutex>
+#include <thread>
 
 using IP = std::string;
 using PORT = std::string;
@@ -32,9 +34,23 @@ struct Connection {
   TimeStamp firstSeen;
 };
 
-struct MonitoringDatabase {
-  NetworkSpeedTracker totalSpeed;
-  std::map<IP, Connection> connections;
+class Monitor {
+public:
+  Monitor();
+  ~Monitor();
 
   void handlePacket(const Packet& packet, bool ssPacket);
+
+private:
+  void backgroundLoop();
+  void sample();
+
+private:
+  std::thread backgroundThread;
+
+  std::mutex lock;
+  bool active = true;
+
+  NetworkSpeedTracker totalSpeed;
+  std::map<IP, Connection> connections;
 };
