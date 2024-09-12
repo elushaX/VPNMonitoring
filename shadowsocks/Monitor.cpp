@@ -33,6 +33,8 @@ void packetHandler(u_char* userData, const struct pcap_pkthdr* pkthdr, const u_c
   Packet ssPacket;
   ssPacket.sizeBytes = pkthdr->len;
 
+  std::cout << "in " << src_ip << " out " << dst_ip << "\n";
+
   if (std::string(src_ip).find("192.168") == std::string::npos) {
     ssPacket.incoming = true;
     ssPacket.ip = dst_ip;
