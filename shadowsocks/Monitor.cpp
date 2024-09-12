@@ -12,7 +12,7 @@ struct Packet {
 };
 
 void processShadowSocksPackets(const Packet& packet) {
-  std::cout << (packet.incoming ? "IN" : "OUT") << packet.ip << " " << packet.sizeBytes << " bytes";
+  std::cout << (packet.incoming ? "IN " : "OUT ") << packet.ip << " " << packet.sizeBytes << " bytes\n";
 }
 
 const std::string shadowSocksPort = "2338";
