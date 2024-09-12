@@ -5,8 +5,21 @@
 #include <netinet/ip.h>
 #include <netinet/tcp.h>
 
+struct Packet {
+  uint sizeBytes = 0;
+  bool incoming = false;
+  std::string ip;
+};
+
+void processShadowSocksPackets(const Packet& packet) {
+  std::cout << (packet.incoming ? "IN" : "OUT") << packet.ip << " " << packet.sizeBytes << " bytes";
+}
+
+const std::string shadowSocksPort = "2338";
+
 // Callback function to process each packet
 void packetHandler(u_char* userData, const struct pcap_pkthdr* pkthdr, const u_char* packet) {
+
   struct ip* ipHeader;
   struct tcphdr* tcpHeader;
   char src_ip[INET_ADDRSTRLEN];
@@ -17,27 +30,24 @@ void packetHandler(u_char* userData, const struct pcap_pkthdr* pkthdr, const u_c
   inet_ntop(AF_INET, &(ipHeader->ip_src), src_ip, INET_ADDRSTRLEN);
   inet_ntop(AF_INET, &(ipHeader->ip_dst), dst_ip, INET_ADDRSTRLEN);
 
-  // Check if packet is incoming or outgoing (assuming you have access to the local IP address)
-  std::string direction = "UNKNOWN";
+  Packet ssPacket;
+  ssPacket.sizeBytes = pkthdr->len;
 
-  // Print packet information
-  std::cout << "Packet size: " << pkthdr->len << " bytes\n";
-  std::cout << "Source IP: " << src_ip << " Destination IP: " << dst_ip << std::endl;
-  std::cout << "Direction: " << direction << std::endl;
-
-  // Drop packet if source IP is in blocked_ip_list
-  if (false) {
-    std::cout << "Packet from " << src_ip << " is dropped." << std::endl;
-    return;  // Dropping the packet
+  if (std::string(src_ip).find("192.168") == std::string::npos) {
+    ssPacket.incoming = true;
+    ssPacket.ip = dst_ip;
+  } else if (std::string(dst_ip).find("192.168") == std::string::npos) {
+    ssPacket.incoming = false;
+    ssPacket.ip = src_ip;
+  } else {
+    std::cout << "Error Parsing data packet\n";
   }
 
-  // If TCP, get source and destination ports
   if (ipHeader->ip_p == IPPROTO_TCP) {
     tcpHeader = (struct tcphdr*)(packet + 14 + (ipHeader->ip_hl * 4));  // Skip IP header
-    std::cout << "Source Port: " << ntohs(tcpHeader->source) << " Destination Port: " << ntohs(tcpHeader->dest) << std::endl;
-  } else {
-    std::cout << "unknown protocol\n";
-  }
 
-  std::cout << "---------------------------------------------\n";
+    if (shadowSocksPort == std::to_string(ntohs(ssPacket.incoming ? tcpHeader->dest : tcpHeader->source))) {
+      processShadowSocksPackets(ssPacket);
+    }
+  }
 }
