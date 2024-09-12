@@ -35,10 +35,10 @@ void packetHandler(u_char* userData, const struct pcap_pkthdr* pkthdr, const u_c
   ssPacket.sizeBytes = pkthdr->len;
 
   if (src_ip == shadowSocksIP) {
-    ssPacket.incoming = true;
+    ssPacket.incoming = false;
     ssPacket.ip = dst_ip;
   } else if (dst_ip == shadowSocksIP) {
-    ssPacket.incoming = false;
+    ssPacket.incoming = true;
     ssPacket.ip = src_ip;
   } else {
     std::cout << "Error Parsing data packet - in " << src_ip << " out " << dst_ip << "\n";
