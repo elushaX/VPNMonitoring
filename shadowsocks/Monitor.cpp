@@ -48,10 +48,9 @@ void packetHandler(u_char* userData, const struct pcap_pkthdr* pkthdr, const u_c
     tcpHeader = (struct tcphdr*)(packet + 14 + (ipHeader->ip_hl * 4));  // Skip IP header
 
     auto port = std::to_string(ntohs(ssPacket.incoming ? tcpHeader->dest : tcpHeader->source));
-    std::cout << "Port " << port << "\n";
 
-    // if (shadowSocksPort ==  {
-      // processShadowSocksPackets(ssPacket);
-    //}
+    if (shadowSocksPort == port) {
+      processShadowSocksPackets(ssPacket);
+    }
   }
 }
