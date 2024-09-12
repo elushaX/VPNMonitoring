@@ -15,10 +15,11 @@ struct Packet {
   uint sizeBytes = 0;
   bool incoming = false;
   std::string ip;
+  std::string localIP;
 };
 
-void processShadowSocksPackets(const Packet& packet) {
-  std::cout << (packet.incoming ? "IN " : "OUT ") << packet.ip << " " << packet.sizeBytes << " bytes\n";
+void processPacket(const Packet& packet, bool ssPacket) {
+  std::cout << (packet.incoming ? "IN " : "OUT ") << packet.ip << " " << packet.sizeBytes << " bytes (local ip " << packet.localIP << ")\n";
 }
 
 const std::string shadowSocksPort = "2338";
@@ -80,20 +81,26 @@ void packetHandler(u_char* userData, const struct pcap_pkthdr* pkthdr, const u_c
   if (isLocalIP(src_ip)) {
     ssPacket.incoming = false;
     ssPacket.ip = dst_ip;
+    ssPacket.localIP = src_ip;
   } else {
     ssPacket.incoming = true;
     ssPacket.ip = src_ip;
+    ssPacket.localIP = dst_ip;
   }
+
+  bool processed = false;
 
   if (ipHeader->ip_p == IPPROTO_TCP) {
     tcpHeader = (struct tcphdr*)(packet + 14 + (ipHeader->ip_hl * 4));  // Skip IP header
-
     auto port = std::to_string(ntohs(ssPacket.incoming ? tcpHeader->dest : tcpHeader->source));
 
     if (shadowSocksPort == port) {
-      processShadowSocksPackets(ssPacket);
+      processPacket(ssPacket, true);
+      processed = true;
     }
   }
 
-  std::cout << " --- " << (ssPacket.incoming ? "IN " : "OUT ") << ssPacket.ip << " " << ssPacket.sizeBytes << " bytes\n";
+  if (!processed) {
+    processPacket(ssPacket, false);
+  }
 }
