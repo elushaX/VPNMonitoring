@@ -1,6 +1,6 @@
 #pragma once
 
-#include "InfluxDataBase.hpp"
+#include "PrometheusDataBase.hpp"
 
 #include <pqxx/pqxx>
 #include <iostream>
@@ -22,5 +22,5 @@ private:
   void checkDataBase();
 
 private:
-  InfluxDataBase timeSeriesDataBase;
+  PrometheusDataBase timeSeriesDataBase;
 };
