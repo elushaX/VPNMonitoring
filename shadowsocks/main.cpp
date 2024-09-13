@@ -14,7 +14,6 @@
 
 #include <thread>
 
-Monitor monitor;
 
 void packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const u_char *packet);
 
@@ -60,6 +59,8 @@ bool isLocalIP(const std::string &ip) {
 
 // Callback function to process each packet
 void packetHandler(u_char *userData, const struct pcap_pkthdr *pkthdr, const u_char *packet) {
+
+  static Monitor monitor;
 
   struct ip *ipHeader;
   struct tcphdr *tcpHeader;

@@ -4,7 +4,9 @@
 #include <iostream>
 #include <cstdlib>
 
-Monitor::Monitor() : backgroundThread([this]() { this->backgroundLoop(); }) {}
+Monitor::Monitor() : pgDatabase() {
+  backgroundThread = std::thread(([this]() { this->backgroundLoop(); }));
+}
 
 Monitor::~Monitor() {
   {
@@ -45,21 +47,11 @@ void Monitor::handlePacket(const Packet &packet, bool ssPacket) {
       connection.speed.add(packet);
     }
   }
-
-  if (false) {
-    std::cout << (ssPacket ? "SS" : "") << (packet.incoming ? " IN " : " OUT ") << packet.ip << " "
-              << packet.sizeBytes
-              << " bytes (local ip "
-              << packet.localIP << " : " << packet.localPort << ")\n";
-  }
 }
 
 void Monitor::sample() {
-  system("clear");
-
-  std::cout << "total: in " << totalSpeed.in.get() / 1024 << " out: " << totalSpeed.out.get() / 1024 << "\n";
-
+  pgDatabase.recordTotal(totalSpeed.in.get(), totalSpeed.out.get());
   for (auto &[_, con]: connections) {
-    std::cout << "connection: " << con.ip << " in " << con.speed.in.get() / 1024 << " out: " << con.speed.out.get() / 1024 << "\n";
+    pgDatabase.recordConnection(con.ip, con.speed.in.get(), con.speed.out.get());
   }
 }

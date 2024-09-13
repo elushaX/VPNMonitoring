@@ -30,8 +30,6 @@ private:
       return;
     }
 
-    // std::cout << "updating " << elapsedSeconds.count() << "\n";
-
     speed = static_cast<double>(totalBytes) / elapsedSeconds.count();
 
     totalBytes = 0;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Timings.hpp"
+#include "PGDatabase.hpp"
 
 #include <string>
 #include <map>
@@ -53,4 +54,6 @@ private:
 
   NetworkSpeedTracker totalSpeed;
   std::map<IP, Connection> connections;
+
+  PGDatabase pgDatabase;
 };
