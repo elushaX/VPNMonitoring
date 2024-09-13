@@ -1,7 +1,7 @@
 
 #include "PGDatabase.hpp"
 
-PGDatabase::PGDatabase() : connection_str("host=localhost port=5432 dbname=mydb user=auser") {
+PGDatabase::PGDatabase() : connection_str("host=localhost port=5432 dbname=mydb user=auser password=1234") {
   connection = new pqxx::connection(connection_str);
 
   if (connection->is_open()) {
