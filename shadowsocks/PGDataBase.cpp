@@ -48,15 +48,7 @@ void PGDatabase::recordConnection(const std::string &ip_address, double speedByt
         pqxx::params{ip_address}
     );
 
-    pqxx::result res = txn.exec(
-        "SELECT id FROM users WHERE ip_address = $1;",
-        pqxx::params{ip_address}
-    );
-
-    if (!res.empty()) {
-      int user_id = res[0][0].as<int>();
-      timeSeriesDataBase.insertPoint(std::to_string(user_id), speedBytesIn, speedBytesOut);
-    }
+    timeSeriesDataBase.insertPoint(ip_address, speedBytesIn, speedBytesOut);
 
     txn.commit();
 
