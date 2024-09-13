@@ -44,7 +44,7 @@ networkSampler = NetworkSampler()
 
 def sample():
 
-    idisk_usage = psutil.disk_usage('/')
+    disk_usage = psutil.disk_usage('/')
 
     memory_load = psutil.virtual_memory().percent  # Memory usage in percentage
     cpu_load = psutil.cpu_percent(interval=1)  # CPU usage in percentage
@@ -56,7 +56,8 @@ def sample():
         "cpu_load": cpu_load,
         "net_in": net_in,
         "net_out": net_out,
-        "disk_free_gb": (disk_usage.free / (1024**3):.2f)
+        "disk_free_gb": disk_usage.free / (1024**3),
+        "disk_usage_percent": disk_usage.percent
     }
 
 
